@@ -1,6 +1,16 @@
+# Sphinx rendered documentation
 docs/_build
 docs/_static
 docs/_templates
-cmdline_provenance.egg-info/
-cmdline_provenance/.ipynb_checkpoints/
-cmdline_provenance/__pycache__/
+
+# Compiled python modules.
+*.pyc
+
+# Setuptools distribution folder.
+/dist/
+
+# Python egg metadata, regenerated from source files by setuptools.
+/*.egg-info
+
+# PyPI build
+/build/

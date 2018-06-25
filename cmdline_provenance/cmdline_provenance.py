@@ -50,7 +50,7 @@ def update_history(file_info=None, extra_notes=None, repo_dir=None):
     output = ''
         
     # Write the newest command line entry
-    new_history = new_cmdline_history()
+    new_history = new_cmdline_history(repo_dir=repo_dir)
     output += new_history + '\n'
     
     # Write the extra info

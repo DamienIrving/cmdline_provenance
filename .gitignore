@@ -1,0 +1,6 @@
+docs/_build
+docs/_static
+docs/_templates
+cmdline_provenance.egg-info/
+cmdline_provenance/.ipynb_checkpoints/
+cmdline_provenance/__pycache__/

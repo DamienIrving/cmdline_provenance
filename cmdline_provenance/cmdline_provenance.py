@@ -1,8 +1,7 @@
-
+import os
 import sys
 import datetime
 import git
-import os
 
 
 def new_cmdline_history(repo_dir=None):

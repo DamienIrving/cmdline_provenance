@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name='cmdline_provenance',
-    version='0.1.2',
+    version='0.2.0',
     description='A Python package for keeping track of your data processing steps',
     long_description=long_description,
     long_description_content_type="text/markdown",

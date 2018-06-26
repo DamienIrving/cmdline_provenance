@@ -35,8 +35,8 @@ Following this simple approach to data provenance,
 it is possible maintain a record of all data processing steps
 from intial download/creation of the data files to the end result (e.g. a .png image).
 
-``cmdline_provenance`` contains a series of functions for generating history records in the NCO/CDO format,
-and for combining the current record with previous records to maintain a complete command log.
+``cmdline_provenance`` contains a function for generating command logs in the NCO/CDO format,
+in addition to simple functions for reading and writing log files.
 
 
 Installation
@@ -133,13 +133,13 @@ including logs from input files
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In order to capture the complete provenance of the output file,
-we need to include the command log from the input files in our new log.
+we need to include the command logs from the input files in our new log.
 We can do this using the ``infile_history`` keyword argument associated with the
 ``new_log`` function.
 
-If our input files are a self describing format,
+If our input files are a self-describing format,
 then similar to the iris example above,
-we can extract the input file logs from the metadata of the input file/s:
+we can extract the input file logs from the metadata of the input files:
 
 .. code-block:: python
 
@@ -155,8 +155,8 @@ we can extract the input file logs from the metadata of the input file/s:
    Tue Jun 26 09:22:10 2018: cdo daymean salinity_data.nc
    Tue Jun 26 09:21:54 2018: ncatted -O -a standard_name,so,o,c,"ocean_salinity" salinity_data.nc
 
-If the input files aren't self describing,
-you can use the ``read_log`` function to read the log files associated with the input data files
+If the input files aren't self-describing,
+we can use the ``read_log`` function to read the log files associated with the input data files
 (these logs files may have been previously written using the ``write_log`` function):
 
 .. code-block:: python
@@ -169,8 +169,8 @@ you can use the ``read_log`` function to read the log files associated with the 
 
 For scripts that take many input files,
 the resulting log files can become very long and unwieldy.
-To avoid this, think about ways to avoid repetition.
-For instance, if you've got one input file that contains data from the year 1999-2003
+To help prevent this, think about ways to avoid repetition.
+For instance, if we've got one input file that contains data from the year 1999-2003
 and another equivalent file with data from 2004-2008,
 it's probably only necessary to include the log from the 1999-2003 file
 (i.e. because essentially identical data processing steps were taken to produce both files).  

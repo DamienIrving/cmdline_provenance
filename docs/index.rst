@@ -149,8 +149,10 @@ we can extract the input file logs from the metadata of the input file/s:
    >>> my_log = cmdprov.new_log(infile_history=inlogs, git_repo='/path/to/git/repo/')
    >>> print(my_log)
    Tue Jun 26 11:24:46 2018: /Applications/anaconda/bin/python ocean_analysis.py temperature_data.nc salinity_data.nc output.nc (Git hash: 026301f)
-   History of temperature_data.nc: Tue Jun 26 09:24:03 2018: cdo daymean temperature_data.nc
-   History of salinity_data.nc: Tue Jun 26 09:22:10 2018: cdo daymean salinity_data.nc
+   History of temperature_data.nc:
+   Tue Jun 26 09:24:03 2018: cdo daymean temperature_data.nc
+   History of salinity_data.nc:
+   Tue Jun 26 09:22:10 2018: cdo daymean salinity_data.nc
    Tue Jun 26 09:21:54 2018: ncatted -O -a standard_name,so,o,c,"ocean_salinity" salinity_data.nc
 
 If the input files aren't self describing,

@@ -15,6 +15,8 @@ setuptools.setup(
     packages=['cmdline_provenance'],
     zip_safe=False,
     install_requires=['datetime', 'gitpython'],
+    license='MIT License',
+    include_package_data=True,
     classifiers=(
         'Programming Language :: Python :: 3',
         'License :: OSI Approved :: MIT License',

@@ -1,1 +1,3 @@
 include LICENSE
+include versioneer.py
+include cmdline_provenance/_version.py

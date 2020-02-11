@@ -1,11 +1,14 @@
 import setuptools
 
+import versioneer
+
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
     name='cmdline_provenance',
-    version='0.2.1',
+    version=versioneer.get_version(),
+    cmdclass=versioneer.get_cmdclass(),
     description='A Python package for keeping track of your data processing steps',
     long_description=long_description,
     long_description_content_type="text/markdown",

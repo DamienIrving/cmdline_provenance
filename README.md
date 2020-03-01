@@ -31,3 +31,9 @@ http://cmdline-provenance.readthedocs.io/en/latest/
 ```
 pip install cmdline-provenance
 ```
+or
+```
+conda install cmdline_provenance
+```
+(The conda-forge feedstock for the conda installation can be found
+[here](https://github.com/conda-forge/cmdline_provenance-feedstock).)

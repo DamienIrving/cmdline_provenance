@@ -46,6 +46,11 @@ Installation
 
    $ pip install cmdline-provenance
 
+or
+
+.. code-block:: bash
+
+   $ conda install cmdline_provenance
 
 Usage
 -----

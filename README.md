@@ -1,3 +1,5 @@
+[![PyPI version](https://badge.fury.io/py/cmdline-provenance.svg)](https://badge.fury.io/py/cmdline-provenance)
+
 # Command line provenance
 
 `cmdline_provenance` is a Python package for keeping track of your data processing steps.

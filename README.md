@@ -1,4 +1,5 @@
 [![PyPI version](https://badge.fury.io/py/cmdline-provenance.svg)](https://badge.fury.io/py/cmdline-provenance)
+[![Documentation Status](https://readthedocs.org/projects/cmdline-provenance/badge/?version=latest)](https://cmdline-provenance.readthedocs.io/en/latest/?badge=latest)
 
 # Command line provenance
 

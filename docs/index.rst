@@ -5,7 +5,6 @@ Command Line Provenance
    :maxdepth: 3
    :hidden:
    
-   index
    api_reference
    
 

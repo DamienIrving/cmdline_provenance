@@ -154,7 +154,7 @@ html_theme = 'sphinxdoc'
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+#html_static_path = ['_static']
 
 # Add any extra paths that contain custom files (such as robots.txt or
 # .htaccess) here, relative to this directory. These files are copied
@@ -294,7 +294,7 @@ latex_documents = [
 
 # If false, no module index is generated.
 #
-latex_domain_indices = False
+#latex_domain_indices = True
 
 
 # -- Options for manual page output ---------------------------------------
@@ -328,7 +328,7 @@ texinfo_documents = [
 
 # If false, no module index is generated.
 #
-texinfo_domain_indices = False
+#texinfo_domain_indices = True
 
 # How to display URL addresses: 'footnote', 'no', or 'inline'.
 #

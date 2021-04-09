@@ -1,14 +1,14 @@
 import os
 import sys
 import datetime
-import git
 
 
-def get_current_entry(git_repo=None):
+def get_current_entry(code_url=None):
     """Create a record of the current command line entry.
     
     Kwargs:
-      git_repo (str): Location of git repository associated with script executed at command line
+      code_url (str):  Where to find the code online
+                       (e.g. https://github.com/... or https://doi.org/...) 
     
     Returns:
       str. Latest command line record
@@ -19,35 +19,33 @@ def get_current_entry(git_repo=None):
     exe = sys.executable
     args = " ".join(sys.argv)
     
-    if git_repo:
-        git_hash = git.Repo(git_repo).heads[0].commit
-        git_text = " (Git hash: %s)" %(str(git_hash)[0:7])
-    else:
-        git_text = ''
-        
-    entry = """%s: %s %s%s""" %(time_stamp, exe, args, git_text)
+    entry = f"{time_stamp}: {exe} {args}"
     
+    if code_url:
+        entry = entry + f" ({code_url})"
+            
     return entry
 
     
-def new_log(infile_history=None, extra_notes=None, git_repo=None):
-    """Create a new command line log/history.
+def new_log(infile_logs=None, extra_notes=None, code_url=None):
+    """Create a new command log/history.
     
     Kwargs:
-      infile_history (dict): keys are input file names and values are the logs for those files 
-      
-      extra_notes (list): List containing strings of extra information  (output is one list item per line)
-      
-      git_repo (str): Location of git repository associated with script executed at command line
+      infile_logs (dict):  Keys are input file names
+                           Values are the logs for those files 
+      extra_notes (list):  Extra information to include in new log
+                           (output is one list item per line)
+      code_url (str):      Where to find the code online
+                           (e.g. https://github.com/... or https://doi.org/...) 
       
     Returns:
-      str. Command line log
+      str. Command log
       
     """
     
     log = ''
         
-    current_entry = get_current_entry(git_repo=git_repo)
+    current_entry = get_current_entry(code_url=code_url)
     log += current_entry + '\n'
     
     if extra_notes:
@@ -55,14 +53,15 @@ def new_log(infile_history=None, extra_notes=None, git_repo=None):
         for line in extra_notes:
             log += line + '\n'
     
-    if infile_history:
-        assert type(infile_history) == dict
-        nfiles = len(list(infile_history.keys()))
-        for fname, history in infile_history.items():
+    if infile_logs:
+        assert type(infile_logs) == dict, \
+        "infile_logs argument must be a dict: file names as keys and logs as values"
+        nfiles = len(list(infile_logs.keys()))
+        for fname, history in infile_logs.items():
             if nfiles > 1:
-                log += 'History of %s: \n %s \n' %(fname, history)
+                log += f"History of {fname}: \n {history} \n"
             else:
-                log += '%s \n' %(history)
+                log += f"{history} \n"
     
     return log
 
@@ -71,10 +70,10 @@ def read_log(fname):
     """Read a log file.
     
     Args:
-      fname (str): Name of log file
+      fname (str):  Name of log file
       
     Returns:
-      str. Command line log
+      str. Command log
     
     """
    
@@ -85,12 +84,11 @@ def read_log(fname):
 
     
 def write_log(fname, cmd_log):
-    """Write an updated command line log/history to a text file.
+    """Write an updated command log/history to a text file.
     
     Args:
-      fname (str): Name of output file
-      
-      cmd_log (str): Command line log produced by new_log()
+      fname (str):    Name of output file
+      cmd_log (str):  Command line log produced by new_log()
     
     """
    

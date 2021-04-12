@@ -17,8 +17,8 @@ For example, after selecting the 2001-2005 time period from a rainfall data file
 and then deleting the `long_name` file attribute,
 the command log would look as follows:
 ```
-Fri Dec 08 10:05:47 2017: ncatted -O -a long_name,pr,d,, rainfall_data_200101-200512.nc
-Fri Dec 01 07:59:16 2017: cdo seldate,2001-01-01,2005-12-31 rainfall_data_185001-200512.nc rainfall_data_200101-200512.nc
+Fri Dec 08 10:05:47 2017: ncatted -O -a long_name,pr,d,, rainfall_data_2001-2005.nc
+Fri Dec 01 07:59:16 2017: cdo seldate,2001-01-01,2005-12-31 rainfall_data_1850-2005.nc rainfall_data_2001-2005.nc
 ```
 Following this simple approach to data provenance,
 it is possible maintain a record of all data processing steps
@@ -40,5 +40,3 @@ or
 ```
 conda install cmdline_provenance
 ```
-(The conda-forge feedstock for the conda installation can be found
-[here](https://github.com/conda-forge/cmdline_provenance-feedstock).)

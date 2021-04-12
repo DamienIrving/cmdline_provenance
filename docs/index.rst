@@ -91,7 +91,7 @@ we can include the relevant URL in the command log:
    >>> print(my_log)
    Tue Jun 26 11:24:46 2018: /Users/username/opt/anaconda3/bin/python ocean_analysis.py temperature_data.fmt salinity_data.fmt output.fmt (https://doi.org/10.6084/m9.figshare.12143562.v3)
 
-```
+```  
 #### Notebooks {.bs-callout .bs-callout-gray}
 
 If the code you've written to produce a given output file is in a Jupyter Notebook

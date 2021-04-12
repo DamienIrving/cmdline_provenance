@@ -1,6 +1,17 @@
 import os
 import sys
 import datetime
+import subprocess
+
+import ipynbname
+
+
+def isnotebook():
+    try:
+        ipynbname.name()
+        return True
+    except FileNotFoundError:
+        return False
 
 
 def get_current_entry(code_url=None):
@@ -8,7 +19,7 @@ def get_current_entry(code_url=None):
     
     Kwargs:
       code_url (str):  Where to find the code online
-                       (e.g. https://github.com/... or https://doi.org/...) 
+                       (e.g. https://github.com/... or https://doi.org/...)
     
     Returns:
       str. Latest command line record
@@ -16,11 +27,15 @@ def get_current_entry(code_url=None):
     """
 
     time_stamp = datetime.datetime.now().strftime("%a %b %d %H:%M:%S %Y")
-    exe = sys.executable
-    args = " ".join(sys.argv)
+    if isnotebook():
+        exe = subprocess.run(['which', 'jupyter'], stdout=subprocess.PIPE)
+        exe = exe.stdout.decode('utf-8').replace('\n','')
+        args = " ".join(['notebook', str(ipynbname.path())])
+    else:
+        exe = sys.executable
+        args = " ".join(sys.argv)
     
     entry = f"{time_stamp}: {exe} {args}"
-    
     if code_url:
         entry = entry + f" ({code_url})"
             
@@ -43,25 +58,24 @@ def new_log(infile_logs=None, extra_notes=None, code_url=None):
       
     """
     
-    log = ''
-        
-    current_entry = get_current_entry(code_url=code_url)
-    log += current_entry + '\n'
+    log = get_current_entry(code_url=code_url)
     
     if extra_notes:
-        log += 'Extra notes: \n'
+        assert isinstance(extra_notes, (list, tuple)), \
+        "extra_notes must be a list/tuple: output is one list/tuple item per line"
+        log += '\nExtra notes: '
         for line in extra_notes:
-            log += line + '\n'
+            log += '\n' + line 
     
     if infile_logs:
-        assert type(infile_logs) == dict, \
-        "infile_logs argument must be a dict: file names as keys and logs as values"
+        assert isinstance(infile_logs, dict), \
+        "infile_logs must be a dict: file names as keys and logs as values"
         nfiles = len(list(infile_logs.keys()))
         for fname, history in infile_logs.items():
             if nfiles > 1:
-                log += f"History of {fname}: \n {history} \n"
+                log += f"\nHistory of {fname}: \n {history}"
             else:
-                log += f"{history} \n"
+                log += f"\n{history}"
     
     return log
 

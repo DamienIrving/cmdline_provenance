@@ -23,7 +23,7 @@ $ pip install -e .
 $ python setup.py sdist bdist_wheel
 ```
 4. Remove the old versions from `dist/`
-5. Upload to TestPyPI to check that everything looks fine
+5. Upload to [TestPyPI](https://test.pypi.org/project/cmdline-provenance/) to check that everything looks fine
 ```
 $ twine upload --repository testpypi dist/*`
 ```

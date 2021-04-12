@@ -21,14 +21,15 @@ These tools generate a record of what was executed at the command line,
 append that record to the history attribute from the input data file,
 and then set this command log as the history attribute of the output data file.
 
-For example, after selecting the 2001-2005 time period from a rainfall data file
-and then deleting the ``long_name`` file attribute,
+For example, after using NCO and CDO to
+select the 2001-2005 time period from a rainfall data file
+and then delete the ``long_name`` file attribute,
 the command log would look as follows:
 
 .. code-block:: bash
 
-   Fri Dec 08 10:05:47 2017: ncatted -O -a long_name,pr,d,, rainfall_data_200101-200512.nc
-   Fri Dec 01 07:59:16 2017: cdo seldate,2001-01-01,2005-12-31 rainfall_data_185001-200512.nc rainfall_data_200101-200512.nc
+   Fri Dec 08 10:05:47 2017: ncatted -O -a long_name,pr,d,, rainfall_data_2001-2005.nc
+   Fri Dec 01 07:59:16 2017: cdo seldate,2001-01-01,2005-12-31 rainfall_data_1850-2005.nc rainfall_data_2001-2005.nc
 
 Following this simple approach to data provenance,
 it is possible maintain a record of all data processing steps
@@ -61,7 +62,7 @@ Let's say we have a script ``ocean_analysis.py``,
 which takes two files as input (an ocean temperature and ocean salinity file)
 and outputs a single file.
 These input files could be CSV (.csv) or netCDF (.nc) or some other format,
-and the output could be another data file (e.g. .csv or .nc) or a figure (e.g. .png, .eps).
+and the output could be another data file (e.g. .csv or .nc) or an image (e.g. .png, .eps).
 For the sake of example, we will simply use an unspecified format (.fmt) for now.
 
 The script can be run at the command line as follows:
@@ -70,33 +71,42 @@ The script can be run at the command line as follows:
   
    $ python ocean_analysis.py temperature_data.fmt salinity_data.fmt output.fmt
    
-
 To create a new log that captures this command line entry,
-we can use the ``new_log`` function:
+we can add a couple of lines to our script to make use of the ``new_log`` function:
 
 .. code-block:: python
 
    >>> import cmdline_provenance as cmdprov
    >>> my_log = cmdprov.new_log()
    >>> print(my_log)
-   Tue Jun 26 11:24:46 2018: /Applications/anaconda/bin/python ocean_analysis.py temperature_data.fmt salinity_data.fmt output.fmt
-   
-If our script is tracked in a version controlled git repository,
-we can provide the location of that repository (the top-level directory)
-and the log entry will specify the precise version of ``ocean_analysis.py`` that was executed:
+   Tue Jun 26 11:24:46 2018: /Users/username/opt/anaconda3/bin/python ocean_analysis.py temperature_data.fmt salinity_data.fmt output.fmt
+
+If our script is available via an online code hosting platform (e.g. GitHub, Bitbucket)
+or has been published with a DOI,
+we can include the relevant URL in the command log:
 
 .. code-block:: python
 
-   >>> my_log = cmdprov.new_log(git_repo='/path/to/git/repo/')
+   >>> my_log = cmdprov.new_log(code_url='https://doi.org/10.6084/m9.figshare.12143562.v3')
    >>> print(my_log)
-   Tue Jun 26 11:24:46 2018: /Applications/anaconda/bin/python ocean_analysis.py temperature_data.fmt salinity_data.fmt output.fmt (Git hash: 026301f)
+   Tue Jun 26 11:24:46 2018: /Users/username/opt/anaconda3/bin/python ocean_analysis.py temperature_data.fmt salinity_data.fmt output.fmt (https://doi.org/10.6084/m9.figshare.12143562.v3)
 
+```
+#### Notebooks {.bs-callout .bs-callout-gray}
 
-Each commit in a git repository is associated with a unique 40-character identifier known as a hash.
-The ``new_log`` function has included the first 7-characters
-of the hash associated with the latest commit to the repository,
-which is sufficient information to revert back to that previous version of ``ocean_analysis.py`` if need be.
+If the code you've written to produce a given output file is in a Jupyter Notebook
+rather than a command line script,
+the ``new_log`` function will recognise it's being executed in a notebook
+and adjust the log accordingly:
 
+.. code-block:: python
+
+   In [1]:  my_log = cmdprov.new_log()
+            print(my_log)
+
+   Out [1]: Tue Jun 26 11:24:46 2018: /Users/username/opt/anaconda3/bin/jupyter notebook ocean_analysis.ipynb
+
+```
 
 writing a log to file
 ^^^^^^^^^^^^^^^^^^^^^
@@ -113,14 +123,29 @@ the process would look something like this:
 
    >>> import iris
    >>> import cmdline_provenance as cmdprov
-   >>> my_log = cmdprov.new_log(git_repo='/path/to/git/repo/')
+   >>> my_log = cmdprov.new_log()
    ...
-   >>> type(output_cube)
+   >>> type(cube)
    iris.cube.Cube
-   >>> output_cube.attributes['history'] = my_log
-   >>> iris.save(output_cube, 'output.nc')
+   >>> cube.attributes['history'] = my_log
+   >>> iris.save(cube, 'output.nc')
 
-If the output file was not a self-describing format (e.g. ``output.png``),
+Similarly, if our output file was a .png file created using 
+`matplotlib <https://matplotlib.org/>`_,
+we could append the command log to the image metadata:
+
+.. code-block:: python
+
+   >>> import matplotlib.pyplot as plt
+   >>> my_log = cmdprov.new_log()
+   ...
+   >>> plt.savefig('output.png', metadata={'History': new_log})
+
+The PyAOS Data Carpentry 
+`lesson on data provenance <https://carpentrieslab.github.io/python-aos-lesson/09-provenance/index.html>`_
+covers writing metadata to different image formats in more detail. 
+
+If our output file is not a self-describing format (e.g. ``output.csv``),
 then we can write a separate log file (i.e. a simple text file with the log in it)
 using the ``write_log`` function.
 
@@ -138,7 +163,7 @@ including logs from input files
 
 In order to capture the complete provenance of the output file,
 we need to include the command logs from the input files in our new log.
-We can do this using the ``infile_history`` keyword argument associated with the
+We can do this using the ``infile_logs`` keyword argument associated with the
 ``new_log`` function.
 
 If our input files are a self-describing format,
@@ -150,9 +175,9 @@ we can extract the input file logs from the metadata of the input files:
    >>> inlogs = {}
    >>> inlogs['temperature_data.nc'] = temperature_cube.attributes['history']
    >>> inlogs['salinity_data.nc'] = salinity_cube.attributes['history']
-   >>> my_log = cmdprov.new_log(infile_history=inlogs, git_repo='/path/to/git/repo/')
+   >>> my_log = cmdprov.new_log(infile_logs=inlogs)
    >>> print(my_log)
-   Tue Jun 26 11:24:46 2018: /Applications/anaconda/bin/python ocean_analysis.py temperature_data.nc salinity_data.nc output.nc (Git hash: 026301f)
+   Tue Jun 26 11:24:46 2018: /Users/username/opt/anaconda3/bin/python ocean_analysis.py temperature_data.nc salinity_data.nc output.nc
    History of temperature_data.nc:
    Tue Jun 26 09:24:03 2018: cdo daymean temperature_data.nc
    History of salinity_data.nc:
@@ -168,13 +193,12 @@ we can use the ``read_log`` function to read the log files associated with the i
    >>> inlogs = {}
    >>> inlogs['temperature_data.csv'] = cmdprov.read_log('temperature_data.log')
    >>> inlogs['salinity_data.csv'] = cmdprov.read_log('salinity_data.log')
-   >>> my_log = cmdprov.new_log(infile_history=inlogs, git_repo='/path/to/git/repo/')
-
+   >>> my_log = cmdprov.new_log(infile_history=inlogs)
 
 For scripts that take many input files,
 the resulting log files can become very long and unwieldy.
 To help prevent this, think about ways to avoid repetition.
-For instance, if we've got one input file that contains data from the year 1999-2003
+For instance, if you've got one input file that contains data from the year 1999-2003
 and another equivalent file with data from 2004-2008,
 it's probably only necessary to include the log from the 1999-2003 file
 (i.e. because essentially identical data processing steps were taken to produce both files).  

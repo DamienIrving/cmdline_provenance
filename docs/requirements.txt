@@ -1,1 +1,1 @@
-gitpython
+ipynbname

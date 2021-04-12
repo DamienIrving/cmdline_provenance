@@ -17,7 +17,7 @@ setuptools.setup(
     url='https://github.com/DamienIrving/cmdline_provenance',
     packages=['cmdline_provenance'],
     zip_safe=False,
-    install_requires=['datetime', 'gitpython'],
+    install_requires=['ipynbname'],
     license='MIT License',
     include_package_data=True,
     classifiers=(

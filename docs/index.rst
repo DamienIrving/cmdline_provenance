@@ -108,7 +108,7 @@ writing a log to file
 ^^^^^^^^^^^^^^^^^^^^^
 
 If our output file is a self-describing file format (i.e. a format that carries its metadata with it),
-then we can include our new log in the file metadata.
+we can include our new log in the file metadata.
 For instance, a common convention in weather and climate science is to include the command log
 in the global history attribute of netCDF data files.
 If we were using the `iris <https://scitools.org.uk/iris/docs/latest/>`_
@@ -143,7 +143,7 @@ we could append the command log to the image metadata:
    >>> import matplotlib.pyplot as plt
    >>> my_log = cmdprov.new_log()
    ...
-   >>> plt.savefig('output.png', metadata={'History': new_log})
+   >>> plt.savefig('output.png', metadata={'History': my_log})
 
 The PyAOS Data Carpentry 
 `lesson on data provenance <https://carpentrieslab.github.io/python-aos-lesson/09-provenance/index.html>`_
@@ -197,7 +197,7 @@ we can use the ``read_log`` function to read the log files associated with the i
    >>> inlogs = {}
    >>> inlogs['temperature_data.csv'] = cmdprov.read_log('temperature_data.log')
    >>> inlogs['salinity_data.csv'] = cmdprov.read_log('salinity_data.log')
-   >>> my_log = cmdprov.new_log(infile_history=inlogs)
+   >>> my_log = cmdprov.new_log(infile_logs=inlogs)
 
 For scripts that take many input files,
 the resulting log files can become very long and unwieldy.

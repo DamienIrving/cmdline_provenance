@@ -111,20 +111,28 @@ If our output file is a self-describing file format (i.e. a format that carries 
 then we can include our new log in the file metadata.
 For instance, a common convention in weather and climate science is to include the command log
 in the global history attribute of netCDF data files.
-If we were using the `iris <https://scitools.org.uk/iris/docs/latest/>`_ library (for instance)
-to read and write netCDF files using its cube data structure,
+If we were using the `iris <https://scitools.org.uk/iris/docs/latest/>`_
+or `xarray <http://xarray.pydata.org/en/stable/>`_ libraries (for instance)
+to read and write netCDF files,
 the process would look something like this:
 
 .. code-block:: python
 
    >>> import iris
+   >>> import xarray as xr
    >>> import cmdline_provenance as cmdprov
    >>> my_log = cmdprov.new_log()
    ...
+   
    >>> type(cube)
    iris.cube.Cube
    >>> cube.attributes['history'] = my_log
    >>> iris.save(cube, 'output.nc')
+
+   >>> type(ds)
+   xarray.core.dataset.Dataset
+   >>> ds.attrs['history'] = my_log
+   >>> ds.to_netcdf('output.nc')
 
 Similarly, if our output file was a .png file created using 
 `matplotlib <https://matplotlib.org/>`_,
